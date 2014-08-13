@@ -1,18 +1,9 @@
 package golog
 
 import (
-        "bufio"
-        "bytes"
         "fmt"
-        "io"
-        "io/ioutil"
-        "net"
         "os"
-        "os/exec"
-        "os/signal"
-        "path/filepath"
         "runtime"
-        "strings"
         "sync"
         "sync/atomic"
         "syscall"
@@ -20,14 +11,13 @@ import (
 )
 
 const (
-        LOG_MAX_SIZE           = 1024 * 1024 * 8
-        LOG_NONE               = 0x00
-        LOG_CRIT               = 0x1000
-        LOG_ERR                = 0x2000
-        LOG_DEBUG              = 0x3000
-        LOG_INFO               = 0x4000
+        LOG_MAX_SIZE = 1024 * 1024 * 8
+        LOG_NONE     = 0x00
+        LOG_CRIT     = 0x1000
+        LOG_ERR      = 0x2000
+        LOG_DEBUG    = 0x3000
+        LOG_INFO     = 0x4000
 )
-
 
 type Hlog struct {
         prefix        string
@@ -39,6 +29,8 @@ type Hlog struct {
         level         int
         is_close      bool
 }
+
+var g_file_suffix uint32 = 100
 
 //Create server to provide you write log
 func NewLog(filename, prefix string, size int64, level int) *Hlog {
@@ -177,4 +169,3 @@ func (h *Hlog) Printf(level int, format string, v ...interface{}) {
         }
         h.w_sync.Done()
 }
-
